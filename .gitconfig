@@ -1,0 +1,14 @@
+[user]
+	name = Ryan Duff
+	email = ryan@fusionized.com
+[mergetool]
+	keepBackup = true
+[color]
+	ui = auto
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
+[core]
+	editor = /usr/bin/vim
