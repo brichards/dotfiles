@@ -6,34 +6,7 @@ LOCAL_DEV_FOLDER=$HOME/Dropbox/Projects/Local\ Dev
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
 ZSH_THEME="agnoster"
-
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Set to this to use case-sensitive completion
-# CASE_SENSITIVE="true"
-
-# Comment this out to disable bi-weekly auto-update checks
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment to change how often before auto-updates occur? (in days)
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment following line if you want to disable colors in ls
-# DISABLE_LS_COLORS="true"
-
-# Uncomment following line if you want to disable autosetting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment following line if you want to disable command autocorrection
-# DISABLE_CORRECTION="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
 
 # Uncomment following line if you want to disable marking untracked files under
 # VCS as dirty. This makes repository status check for large repositories much,
@@ -45,25 +18,26 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(brew cap composer git osx sublime svn vagrant)
 
+# Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
-# Customize to your needs...
+# Set default user.
+# Will remove from prompt if matches current user
 DEFAULT_USER="ryan"
 
 # Update $PATH
 # @TODO wrap this in file exists check
 source $HOME/.path
 
-#WP-CLI autocomplete
+# WP-CLI autocomplete
 autoload bashcompinit
 bashcompinit
 source $HOME/.composer/vendor/wp-cli/wp-cli/utils/wp-completion.bash
 
-#WP-CLI PHP
-# export WP_CLI_PHP=/usr/local/bin/php
+# WP-CLI PHP
 export WP_CLI_PHP=/Applications/MAMP/bin/php/php5.4.10/bin/php
 
-
+# Aliases
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
 alias ...="cd ../.."
@@ -148,12 +122,12 @@ alias spoton="sudo mdutil -a -i on"
 alias stfu="osascript -e 'set volume output muted true'"
 alias pumpitup="osascript -e 'set volume 7'"
 
-#colors
+# colors
 eval $(dircolors ~/.dir_colors)
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 
-#Jump to local dev project with autocomplete
+# Jump to local dev project with autocomplete
 ldev() {
 	cd $LOCAL_DEV_FOLDER/$1;
 }
