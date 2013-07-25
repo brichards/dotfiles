@@ -64,8 +64,8 @@ source $HOME/.composer/vendor/wp-cli/wp-cli/utils/wp-completion.bash
 export WP_CLI_PHP=/Applications/MAMP/bin/php/php5.4.10/bin/php
 
 alias lsa='ls -alFh --color'
-alias localdev='cd /Users/ryan/Dropbox/Projects/Local\ Dev'
-alias flushcache='dscacheutil -flushcache'
+alias proj='cd /Users/ryan/Dropbox/Projects/'
+alias fcache='dscacheutil -flushcache'
 
 #colors
 eval $(dircolors ~/.dir_colors)
