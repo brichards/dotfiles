@@ -1,7 +1,7 @@
 ; User identification
 [user]
-	name = Ryan Duff
-	email = ryan@fusionized.com
+	name = Brian Richards
+	email = brian@rzen.net
 
 
 ; Custom
@@ -92,25 +92,25 @@
 
 ; diff and merge
 [diff]
-    tool = kaleidoscope
-    guitool = kaleidoscope
+    tool = sublime
+    guitool = sublime
 
 [difftool]
     prompt = false
 
 [merge]
-    tool = kaleidoscope
+    tool = sublime
 
 [mergetool]
     keepBackup = false
     prompt = false
 
-[difftool "kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[difftool "sublime"]
+	cmd = sub -w \$MERGED
 
-[mergetool "kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
+[mergetool "sublime"]
+    cmd = sub -w \$MERGED
+	trustExitCode = false
 
 
 ; Notes
