@@ -1,17 +1,14 @@
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
-# Local dev folder
-LOCAL_DEV_FOLDER=$HOME/Dropbox/Projects/Local\ Dev
-
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
+# Can be set to "random"
 ZSH_THEME="agnoster"
 
-# Uncomment following line if you want to disable marking untracked files under
-# VCS as dirty. This makes repository status check for large repositories much,
-# much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+# Set default user.
+# Will remove from prompt if matches current user
+DEFAULT_USER="brian"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
@@ -20,10 +17,6 @@ plugins=(brew cap composer git osx sublime svn vagrant)
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
-
-# Set default user.
-# Will remove from prompt if matches current user
-DEFAULT_USER="ryan"
 
 # Update $PATH
 # @TODO wrap this in file exists check
@@ -47,15 +40,7 @@ alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # Shortcuts
-alias d="cd ~/Dropbox"
-alias p="cd ~/Dropbox/Projects"
 alias g="git"
-alias h="history"
-alias v="vim"
-alias m="mate"
-alias mc="mate ."
-alias s="sub"
-alias sc="sub ."
 alias o="open"
 alias oo="open ."
 
@@ -113,25 +98,15 @@ alias hide="defaults write com.apple.Finder AppleShowAllFiles -bool false && kil
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
-# Disable Spotlight
-alias spotoff="sudo mdutil -a -i off"
-# Enable Spotlight
-alias spoton="sudo mdutil -a -i on"
-
-# Stuff I never really use but cannot delete either because of http://xkcd.com/530/
-alias stfu="osascript -e 'set volume output muted true'"
-alias pumpitup="osascript -e 'set volume 7'"
-
 # colors
 eval $(dircolors ~/.dir_colors)
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
-
 # Jump to local dev project with autocomplete
+LOCAL_DEV_FOLDER=$HOME/Sites/wds
 ldev() {
 	cd $LOCAL_DEV_FOLDER/$1;
 }
-
 _ldev() {
     local cur
 
@@ -144,5 +119,4 @@ _ldev() {
     fi
 
 }
-
 complete -o nospace -F _ldev ldev
