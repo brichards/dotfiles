@@ -89,30 +89,6 @@
     interactive = auto
     status = auto
 
-
-; diff and merge
-[diff]
-    tool = sublime
-    guitool = sublime
-
-[difftool]
-    prompt = false
-
-[merge]
-    tool = sublime
-
-[mergetool]
-    keepBackup = false
-    prompt = false
-
-[difftool "sublime"]
-	cmd = sub -w \$MERGED
-
-[mergetool "sublime"]
-    cmd = sub -w \$MERGED
-	trustExitCode = false
-
-
 ; Notes
 ; Most aliases from:
 ; 	http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/

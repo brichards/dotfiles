@@ -1,3 +1,6 @@
+# Customize to your needs...
+export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
@@ -9,26 +12,6 @@ ZSH_THEME="agnoster"
 # Set default user.
 # Will remove from prompt if matches current user
 DEFAULT_USER="brian"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew cap composer git osx sublime svn vagrant)
-
-# Load oh-my-zsh
-source $ZSH/oh-my-zsh.sh
-
-# Update $PATH
-# @TODO wrap this in file exists check
-source $HOME/.path
-
-# WP-CLI autocomplete
-autoload bashcompinit
-bashcompinit
-source $HOME/.composer/vendor/wp-cli/wp-cli/utils/wp-completion.bash
-
-# WP-CLI PHP
-export WP_CLI_PHP=/Applications/MAMP/bin/php/php5.4.10/bin/php
 
 # Aliases
 # Easier navigation: .., ..., ...., ....., ~ and -
@@ -102,6 +85,17 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 eval $(dircolors ~/.dir_colors)
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(brew cap composer git osx sublime svn vagrant)
+
+# Load oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+autoload bashcompinit
+bashcompinit
+
 # Jump to local dev project with autocomplete
 LOCAL_DEV_FOLDER=$HOME/Sites/wds
 ldev() {
@@ -113,9 +107,9 @@ _ldev() {
     cur=${COMP_WORDS[COMP_CWORD]}
 
     if [[ '' = $cur ]]; then
-    	COMPREPLY=( $( compgen -W "$(ls "$LOCAL_DEV_FOLDER")" ) )
+        COMPREPLY=( $( compgen -W "$(ls "$LOCAL_DEV_FOLDER")" ) )
     else
-    	COMPREPLY=( $( compgen -W "$(ls "$LOCAL_DEV_FOLDER")" | grep $cur ) )
+        COMPREPLY=( $( compgen -W "$(ls "$LOCAL_DEV_FOLDER")" | grep $cur ) )
     fi
 
 }
