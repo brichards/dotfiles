@@ -1,5 +1,5 @@
 # Customize to your needs...
-export PATH=$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin
+export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin
 
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
