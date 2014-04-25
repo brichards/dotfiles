@@ -1,6 +1,5 @@
 # Customize to your needs...
-export PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin
-
+export PATH=/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin:/Users/brian/.wp-cli/bin:$PATH
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
@@ -22,10 +21,14 @@ alias .....="cd ../../../.."
 alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
+# Imagesnap
+alias isight="imagesnap ~/Dropbox/$(date +%Y-%m-%d--%I.%M.%S.%p).png"
+
 # Shortcuts
 alias g="git"
 alias o="open"
 alias oo="open ."
+alias vup="vagrant up && vagrant provison && vagrant ssh"
 
 # List all files colorized in long format
 alias l="ls -lFh --color"
@@ -93,11 +96,13 @@ plugins=(brew cap composer git osx sublime svn vagrant)
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
+# WP-CLI Bash completions
 autoload bashcompinit
 bashcompinit
+source $HOME/.wp-cli/vendor/wp-cli/wp-cli/utils/wp-completion.bash
 
 # Jump to local dev project with autocomplete
-LOCAL_DEV_FOLDER=$HOME/Sites/wds
+LOCAL_DEV_FOLDER=$HOME/Sites/www/
 ldev() {
 	cd $LOCAL_DEV_FOLDER/$1;
 }
@@ -114,3 +119,9 @@ _ldev() {
 
 }
 complete -o nospace -F _ldev ldev
+
+# added by travis gem
+[ -f /Users/brian/.travis/travis.sh ] && source /Users/brian/.travis/travis.sh
+
+# Awesome support for http://gitignore.io
+function gi() { curl http://www.gitignore.io/api/$@; }
