@@ -91,7 +91,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew cap composer git osx sublime svn vagrant)
+plugins=(brew cap composer git git-extras osx sublime svn vagrant zsh-syntax-highlighting)
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -125,3 +125,9 @@ complete -o nospace -F _ldev ldev
 
 # Awesome support for http://gitignore.io
 function gi() { curl http://www.gitignore.io/api/$@; }
+
+# Open a project in chrome and sublime
+function proj() {
+	open -a "Google Chrome" http://$@.dev;
+	sub ~/Sites/projects/$@.sublime-project;
+}
