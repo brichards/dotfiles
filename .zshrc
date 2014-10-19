@@ -91,15 +91,10 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew cap composer git git-extras osx sublime svn vagrant zsh-syntax-highlighting)
+plugins=(brew composer git git-extras github gitignore npm osx sublime svn vagrant wp-cli zsh-syntax-highlighting)
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
-
-# WP-CLI Bash completions
-autoload bashcompinit
-bashcompinit
-source $HOME/.wp-cli/vendor/wp-cli/wp-cli/utils/wp-completion.bash
 
 # Jump to local dev project with autocomplete
 LOCAL_DEV_FOLDER=$HOME/Sites/www/
