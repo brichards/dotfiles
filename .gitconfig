@@ -10,17 +10,37 @@
     la = "!git config -l | grep alias | cut -c 7-"
 
     ; basic shortcuts
+    cl = clone
+    f = fetch
+
+    ; info
+    logs = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    st = status -s
+    dc = diff --cached
+    diff = diff --word-diff
+
+    ; Committing
     a = add -p
     aa = add
-    cp = cherry-pick
-    st = status -s
-    cl = clone
     ci = commit
-    co = checkout
+    cam = commit -am
+
+    ; Branching
     br = branch
-    diff = diff --word-diff
-    dc = diff --cached
-    fr = "fetch origin master && git rebase origin/master"
+    co = checkout
+    com = checkout master
+    cob = checkout -b
+
+    ; pushing
+    p = push
+    pf = push --force
+
+    ; rebasing
+    ro = rebase origin/master
+    roi = rebase -i origin/master
+    fr = "!git fetch origin master && git rebase origin/master"
+    fri = "fetch origin/master && git rebase -i origin/master"
+    move = "!f(){ CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-'$CURRENT@{u}'} && git rebase --onto ${2-master} $CURRENT; }; f"
 
     ; reset
     r = reset
@@ -29,9 +49,6 @@
     rh = reset --hard
     rh1 = reset HEAD^ --hard
     rh2 = reset HEAD^^ --hard
-
-    ; log stuff
-    logs = log --graph --pretty=format:'%C(yellow)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
     ; history
     filelog = log -u
@@ -43,7 +60,7 @@
     diffr  = "!f() { git diff "$1"^.."$1"; }; f"
 
     ; search
-    f = "!git ls-files | grep -i"
+    ; f = "!git ls-files | grep -i"
     grep = grep -Ii
     gr = grep -Ii
     gra = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
@@ -73,8 +90,9 @@
 
 ; Environment
 [core]
-	editor = /usr/bin/vim
+	editor = sub -n -w
 	symlinks = false
+	filemode = false
 	filemode = false
 	filemode = false
     ;autocrlf = true
@@ -94,4 +112,4 @@
 ; Git config parts taken from:
 ;	http://coderjournal.com/2011/04/gitconfig/
 [push]
-	default = matching
+	default = current
