@@ -1,27 +1,24 @@
+# Customize the PATH
+export PATH=~/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin:/Users/brian/.wp-cli/bin:~/Source/cf/bin:~/Source/cf/git-bin:$PATH
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
-# Local dev folder
-LOCAL_DEV_FOLDER=$HOME/Sites/www/
+# Load oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(brew colorize common-aliases composer git git-extras git-flow git-hubflow github gitignore grunt npm osx wp-cli zsh-syntax-highlighting)
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
 ZSH_THEME="agnoster"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(bower brew colorize common-aliases composer git git-extras git-flow git-hubflow gitignore grunt npm osx sublime svn vagrant wp-cli zsh-syntax-highlighting)
-
-# Load oh-my-zsh
-source $ZSH/oh-my-zsh.sh
-
 # Set default user.
 # Will remove from prompt if matches current user
 DEFAULT_USER="brian"
-
-# Customize the PATH
-export PATH=~/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin:/Users/brian/.wp-cli/bin:~/Source/cf/bin:~/Source/cf/git-bin:$PATH
 
 # colors
 eval $(dircolors ~/.dir_colors)
@@ -100,11 +97,8 @@ alias hide="defaults write com.apple.Finder AppleShowAllFiles -bool false && kil
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
-# Open a project in chrome and sublime
-function proj() {
-	open -a "Google Chrome" http://$@.dev;
-	sub ~/Sites/projects/$@.sublime-project;
-}
+# Awesome support for http://gitignore.io
+function gi() { curl http://www.gitignore.io/api/$@; }
 
 # Install a new WP site
 function wpinstall() {
@@ -117,7 +111,3 @@ function wpinstall() {
 	valet secure $@;
 	open -a "Google Chrome" https://$@.test/wp-admin;
 }
-
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-. /usr/local/etc/profile.d/z.sh
