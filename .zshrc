@@ -1,16 +1,13 @@
 # Customize the PATH
-export PATH=~/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin:/Users/brian/.wp-cli/bin:~/Source/cf/bin:~/Source/cf/git-bin:$PATH
-
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
-
-# Load oh-my-zsh
-source $ZSH/oh-my-zsh.sh
+export PATH=~/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin:/Users/brian/.wp-cli/bin:~/Source/cf/bin:~/Source/cf/git-bin:~/.composer/vendor/bin:$PATH
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(brew colorize common-aliases composer git git-extras git-flow git-hubflow github gitignore grunt npm osx wp-cli zsh-syntax-highlighting)
+
+# Path to your oh-my-zsh configuration.
+ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -19,6 +16,9 @@ ZSH_THEME="agnoster"
 # Set default user.
 # Will remove from prompt if matches current user
 DEFAULT_USER="brian"
+
+# Load oh-my-zsh
+source $ZSH/oh-my-zsh.sh
 
 # colors
 eval $(dircolors ~/.dir_colors)
@@ -110,4 +110,13 @@ function wpinstall() {
 	wp core install --url=https://$@.test --title=$( tr '[A-Z]' '[a-z]' <<< $@ );
 	valet secure $@;
 	open -a "Google Chrome" https://$@.test/wp-admin;
+}
+
+function dbsync() {
+	SITE=${PWD##*/};
+	terminus backup:create --element=db $SITE.live;
+	terminus backup:get --element=db --to=$SITE.sql.gz $SITE.live;
+	gunzip $SITE.sql.gz;
+	wp db import $SITE.sql;
+	rm $SITE.sql;
 }
