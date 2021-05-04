@@ -90,8 +90,8 @@
 
 ; Environment
 [core]
-	editor = sub -n -w
-	symlinks = false
+	editor = code
+	symlinks = true
 	filemode = false
 	filemode = false
 	filemode = false
