@@ -112,6 +112,7 @@ function wpinstall() {
 	open -a "Google Chrome" https://$@.test/wp-admin;
 }
 
+# Import the production database from Pantheon
 function dbsync() {
 	SITE=${PWD##*/};
 	terminus backup:create --element=db $SITE.live;
@@ -119,4 +120,11 @@ function dbsync() {
 	gunzip $SITE.sql.gz;
 	wp db import $SITE.sql;
 	rm $SITE.sql;
+}
+
+# Import the production uploads from Pantheon
+# Requires the terminus rsync plugin (https://github.com/pantheon-systems/terminus-rsync-plugin)
+function filesync() {
+	SITE=${PWD##*/};
+	terminus rsync $SITE.live:files/ ./wp-content/uploads
 }
