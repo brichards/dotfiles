@@ -42,6 +42,8 @@ alias gitorphanreset="git checkout master && git submodule sync && git submodule
 alias dev="cd ~/Sites/www"
 alias pr="hub pull-request"
 
+alias makemkv="/Applications/MakeMKV.app/Contents/MacOS/makemkvcon"
+
 # List all files colorized in long format
 alias l="ls -lFh --color"
 
