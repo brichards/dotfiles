@@ -1,7 +1,20 @@
 # Customize the PATH
-export PATH=~/bin:/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/opt/coreutils/libexec/gnubin:/opt/subversion/bin:/usr/local/git/bin:/Users/brian/.wp-cli/bin:~/Source/cf/bin:~/Source/cf/git-bin:~/.composer/vendor/bin:$PATH
+export PATH=$PATH:~/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/opt/coreutils/libexec/gnubin
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Include Git binaries
+export PATH=$PATH:/usr/local/git/bin
+
+# Include Composer binares
+export PATH=$PATH:~/.composer/vendor/bin
+
+# Include WP-CLI binaries
+export PATH=$PATH:/Users/brian/.wp-cli/bin
+
+# Include VS Code binaries
+export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
+
+# Load oh-my-zsh plugins
+# Core plugins are found in ~/.oh-my-zsh/plugins/
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(brew colorize common-aliases composer git git-extras git-flow git-hubflow github gitignore grunt npm osx wp-cli zsh-syntax-highlighting)
