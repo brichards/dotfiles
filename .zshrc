@@ -4,19 +4,19 @@ export PATH=$PATH:~/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/
 # Include Git binaries
 export PATH=$PATH:/usr/local/git/bin
 
-# Include Composer binares
-export PATH=$PATH:~/.composer/vendor/bin
-
 # Include WP-CLI binaries
 export PATH=$PATH:/Users/brian/.wp-cli/bin
 
 # Include VS Code binaries
 export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 
+# Set default editor to VS Code
+export EDITOR=code
+
 # Load oh-my-zsh plugins
 # Core plugins are found in ~/.oh-my-zsh/plugins/
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(brew colorize common-aliases composer git git-extras git-flow git-hubflow github gitignore npm macos wp-cli zsh-syntax-highlighting)
+plugins=(1password brew colorize common-aliases composer git git-extras github gitignore macos node npm sudo urltools vscode wp-cli zsh-syntax-highlighting)
 
 # Path to oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
@@ -48,16 +48,8 @@ alias oo="open ."
 alias makemkv="/Applications/MakeMKV.app/Contents/MacOS/makemkvcon"
 
 # Git shortcuts
-alias g="git"
-alias gitorphan="git checkout master && git fetch origin && git rebase origin/master && git checkout --orphan wpe && git submodule init && git submodule sync && git submodule update --init --recursive && git flatten-submodules"
-alias gitorphanreset="git checkout master && git submodule sync && git submodule update --init --recursive && git branch -D wpe"
-alias pr="hub pull-request"
+alias pr="gh pr create"
 alias dev="cd ~/Sites/www"
-
-# ls shortcuts
-alias l="ls -lFh --color" # List files colorized in long format
-alias la="ls -laFh" # List all files colorized in long format, including dot files
-alias lsd='ls -lFh --color | grep "^d"' # List only directories
 
 # Networking shortcuts
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -69,7 +61,7 @@ alias sniff="sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'"
 alias flush="dscacheutil -flushcache"
 
 # Edit local hosts file
-alias hosts="sudo code /etc/hosts"
+alias hosts="sudo ${=EDITOR} /etc/hosts"
 
 # OS X has no `md5sum`, so use `md5` as a fallback
 command -v md5sum > /dev/null || alias md5sum="md5"
@@ -84,15 +76,9 @@ alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/La
 # Empty the Trash on all mounted volumes and clear system logs to improve shell startup speed
 alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
 
-# Show/hide hidden files or desktop files
-alias show="defaults write com.apple.Finder AppleShowAllFiles -bool true && killall Finder"
-alias hide="defaults write com.apple.Finder AppleShowAllFiles -bool false && killall Finder"
+# Show/hide desktop files (useful for presenting)
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
-
-# Add support for https://gitignore.io
-# Example usage: gi macos,wordpress >> .gitignore
-function gi() { curl https://www.toptal.com/developers/gitignore/api/$@; }
 
 # Install a new WP site
 function wpinstall() {
