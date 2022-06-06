@@ -88,8 +88,9 @@ function wpinstall() {
 	wp config set WP_DEBUG true --raw;
 	wp db create;
 	wp core install --url=https://$@.test --title=$( tr '[A-Z]' '[a-z]' <<< $@ );
+	wp login install --activate;
 	valet secure $@;
-	open https://$@.test/wp-admin;
+	wp login as brian --launch;
 }
 
 # Import the production database from Pantheon
