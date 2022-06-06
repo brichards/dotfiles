@@ -82,14 +82,14 @@ alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && k
 
 # Install a new WP site
 function wpinstall() {
-	mkdir ~/Sites/www/$@;
-	cd ~/Sites/www/$@;
+	mkdir -p ~/Sites/www/$@ && cd $_;
 	wp core download;
 	wp core config --dbname=$@;
+	wp config set WP_DEBUG true --raw;
 	wp db create;
 	wp core install --url=https://$@.test --title=$( tr '[A-Z]' '[a-z]' <<< $@ );
 	valet secure $@;
-	open -a "Google Chrome" https://$@.test/wp-admin;
+	open https://$@.test/wp-admin;
 }
 
 # Import the production database from Pantheon
