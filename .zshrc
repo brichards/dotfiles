@@ -16,18 +16,15 @@ export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/
 # Load oh-my-zsh plugins
 # Core plugins are found in ~/.oh-my-zsh/plugins/
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew colorize common-aliases composer git git-extras git-flow git-hubflow github gitignore grunt npm osx wp-cli zsh-syntax-highlighting)
+plugins=(brew colorize common-aliases composer git git-extras git-flow git-hubflow github gitignore npm macos wp-cli zsh-syntax-highlighting)
 
-# Path to your oh-my-zsh configuration.
+# Path to oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
+# Set name of the theme to load (stored in ~/.oh-my-zsh/themes/)
 ZSH_THEME="agnoster"
 
-# Set default user.
-# Will remove from prompt if matches current user
+# Set default user (removes from prompt if matches current user)
 DEFAULT_USER="brian"
 
 # Load oh-my-zsh
