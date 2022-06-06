@@ -90,8 +90,9 @@ alias hide="defaults write com.apple.Finder AppleShowAllFiles -bool false && kil
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
-# Awesome support for http://gitignore.io
-function gi() { curl http://www.gitignore.io/api/$@; }
+# Add support for https://gitignore.io
+# Example usage: gi macos,wordpress >> .gitignore
+function gi() { curl https://www.toptal.com/developers/gitignore/api/$@; }
 
 # Install a new WP site
 function wpinstall() {
