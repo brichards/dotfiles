@@ -46,6 +46,7 @@ alias reload="source ~/.zshrc"
 alias o="open"
 alias oo="open ."
 alias makemkv="/Applications/MakeMKV.app/Contents/MacOS/makemkvcon"
+alias code="code -n"
 
 # Git shortcuts
 alias pr="gh pr create"
