@@ -110,3 +110,14 @@ function filesync() {
 	SITE=${PWD##*/};
 	terminus rsync $SITE.live:files/ ./wp-content/uploads
 }
+
+# Deploy to pantheon
+# Usage: deploy both OR deploy test OR deploy live
+function deploy() {
+	SITE=${PWD##*/};
+	if [[ $1 == "both" ]]; then
+		terminus env:deploy $SITE.test && terminus env:deploy $SITE.live;
+	else
+		terminus env:deploy $SITE.$1;
+	fi
+}
