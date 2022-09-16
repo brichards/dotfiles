@@ -10,6 +10,10 @@ export PATH=$PATH:/Users/brian/.wp-cli/bin
 # Include VS Code binaries
 export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 
+# Include PHP 7.4
+export PATH=/usr/local/opt/php@7.4/bin:$PATH
+export PATH=/usr/local/opt/php@7.4/sbin:$PATH
+
 # Set default editor to VS Code
 export EDITOR=code
 
