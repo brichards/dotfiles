@@ -113,3 +113,7 @@
 ;	http://coderjournal.com/2011/04/gitconfig/
 [push]
 	default = current
+[init]
+	defaultBranch = main
+[credential]
+	helper = osxkeychain
