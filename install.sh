@@ -7,6 +7,13 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # Then start things off from the home directory, for good measure
 cd ~
 
+# Add TouchID support for sudo (if not already added)
+if ! grep -Fq "pam_tid.so" /etc/pam.d/sudo; then
+    echo "Adding TouchID support to sudo."
+    (echo "auth       sufficient     pam_tid.so" && cat /etc/pam.d/sudo) > /tmp/sudo_pam_tid.so
+    sudo mv /tmp/sudo_pam_tid.so /etc/pam.d/sudo
+fi
+
 # Ask for the administrator password upfront
 sudo -v;
 
