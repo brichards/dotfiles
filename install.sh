@@ -152,6 +152,7 @@ mas "Shush", id: 496437906
 mas "Things", id: 904280696
 cask "dropbox"
 cask "obsidian"
+cask "adobe-creative-cloud"
 EOF
 
 ran_brew=true
