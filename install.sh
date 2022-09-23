@@ -171,6 +171,10 @@ cask "adobe-creative-cloud"
 EOF
 
 ran_brew=true
+
+# Set Karabiner preferences to load from Dropbox
+rm -rf ~/.config/karabiner
+ln -s ~/Dropbox/App\ Settings/karabiner ~/.config
 fi
 
 ###############################################################################
