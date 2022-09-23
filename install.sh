@@ -20,6 +20,11 @@ sudo -v;
 ###############################################################################
 
 # Ask in advance about which sections to execute
+default_computer_name=$(sudo defaults read /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName)
+read -p "Set new computer name [$default_computer_name]" computer_name
+computer_name=${computer_name:-$default_computer_name}
+computer_name_safe=$( echo $computer_name | sed 's/[\ \.]/-/g' )
+
 read -p "Install basic utilities for homebrew (including cask, mas, coreutils, etc.) ([y]/n)? " homebrew_utils
 homebrew_utils=${homebrew_utils:-y}
 
@@ -58,6 +63,16 @@ homebrew_video=${homebrew_video:-y}
 
 read -p "Update macOS and app preferences ([y]/n)? " macos_prefs
 macos_prefs=${macos_prefs:-y}
+
+###############################################################################
+
+# Set computer name (as done via System Preferences → Sharing)
+if [ $computer_name != $default_computer_name ]; then
+    sudo scutil --set ComputerName $computer_name
+    sudo scutil --set LocalHostName $computer_name_safe
+    sudo scutil --set HostName $computer_name_safe
+    sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string $computer_name_safe
+fi
 
 ###############################################################################
 
