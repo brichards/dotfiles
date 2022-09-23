@@ -237,8 +237,9 @@ if [ "$ohmyzsh" != "${ohmyzsh#[Yy]}" ]; then
         # run via Bash
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
-    git clone git@github.com:zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-    git clone git@github.com:zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    git clone git@github.com:zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+    git clone git@github.com:zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+    git clone git@github.com:joel-porquet/zsh-dircolors-solarized $ZSH_CUSTOM/plugins/zsh-dircolors-solarized
 fi
 
 # Add personal dotfiles via github
@@ -247,7 +248,6 @@ if [ "$dotfiles" != "${dotfiles#[Yy]}" ]; then
     if [ ! $SCRIPT_DIR -ef ~/.dotfiles ]; then
         git clone git@github.com:brichards/dotfiles.git ~/.dotfiles
     fi
-    ln -s ~/.dotfiles/.dir_colors ~/.dir_colors
     ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
     ln -s ~/.dotfiles/.zshrc ~/.zshrc
     ln -s ~/.dotfiles/eslintrc.json ~/Sites/www/eslintrc.json

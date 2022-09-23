@@ -20,7 +20,7 @@ export EDITOR=code
 # Load oh-my-zsh plugins
 # Core plugins are found in ~/.oh-my-zsh/plugins/
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(1password brew colorize common-aliases composer git git-extras github gitignore macos node npm sudo urltools vscode wp-cli zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(1password brew colorize common-aliases composer git git-extras github gitignore macos node npm sudo urltools vscode wp-cli zsh-autosuggestions zsh-syntax-highlighting zsh-dircolors-solarized)
 
 # Path to oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
@@ -33,10 +33,6 @@ DEFAULT_USER="brian"
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
-
-# Set custom ls colors
-eval $(dircolors ~/.dir_colors)
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # ZSH Syntax highlighting
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
