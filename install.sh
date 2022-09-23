@@ -294,6 +294,9 @@ EOF
 
 ran_brew=true
 
+    # Install Terminus rsync plugin
+    terminus self:plugin:install terminus-rsync-plugin
+
     # Install Laravel Valet (https://laravel.com/docs/9.x/valet#installation)
     if [ ! command -v valet >/dev/null ]; then
         echo "Installing and configuring Laravel Valet.\n"
