@@ -58,10 +58,6 @@ sudo defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool fa
 # Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
 
-# Display ASCII control characters using caret notation in standard text views
-# Try e.g. `cd /tmp; unidecode "\x{0000}" > cc.txt; open -e cc.txt`
-defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
-
 # Disable Resume system-wide
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool true
 
@@ -121,9 +117,9 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 # Disable press-and-hold for keys in favor of key repeat
 #defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-# Set a faster keyboard repeat rate, 0 is fastest.
-defaults write NSGlobalDomain KeyRepeat -int 5
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+# Set a faster keyboard repeat rate (0 is fastest, 120 is slowest).
+defaults write NSGlobalDomain KeyRepeat -int 2 # Repeat speed
+defaults write NSGlobalDomain InitialKeyRepeat -int 25 # Delay before repeating
 
 # Set language and text formats
 defaults write NSGlobalDomain AppleLanguages -array "en"
