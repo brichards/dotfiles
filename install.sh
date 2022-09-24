@@ -310,6 +310,7 @@ ran_brew=true
     #  Add additional JS packages
     npm install eslint -g
     npm install prettier -g
+    npm install vercel -g
 
     # Add additional packages for WP-CLI
     echo "Installing additional WP-CLI packages.\n"
