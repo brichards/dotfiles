@@ -4,8 +4,11 @@ export PATH=$PATH:~/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/
 # Include Git binaries
 export PATH=$PATH:/usr/local/git/bin
 
+# Include Composer binaries
+export PATH=$PATH:~/.composer/vendor/bin
+
 # Include WP-CLI binaries
-export PATH=$PATH:/Users/brian/.wp-cli/bin
+export PATH=$PATH:~/.wp-cli/bin
 
 # Include VS Code binaries
 export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
