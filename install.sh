@@ -28,8 +28,11 @@ computer_name_safe=$( echo $computer_name | sed 's/[\ \.]/-/g' )
 read -p "Install basic utilities for homebrew (including cask, mas, coreutils, etc.) ([y]/n)? " homebrew_utils
 homebrew_utils=${homebrew_utils:-y}
 
-read -p "Install essential apps for utility, communication, and PM ([y]/n)? " homebrew_apps
+read -p "Install essential apps for utility ([y]/n)? " homebrew_apps
 homebrew_apps=${homebrew_apps:-y}
+
+read -p "Install work apps (Adobe CC, Slack, Things, Zoom, Shush) ([y]/n)? " homebrew_work
+homebrew_work=${homebrew_work:-y}
 
 read -p "Install general develompent tools like git, gh, npm, yarn, etc. ([y]/n)? " homebrew_dev
 homebrew_dev=${homebrew_dev:-y}
@@ -154,20 +157,11 @@ mas "1Password for Safari", id: 1569813296
 cask "alfred"
 cask "bartender"
 cask "bettertouchtool"
+cask "dropbox"
 cask "droplr"
 cask "karabiner-elements"
-cask "rocket" # system-wide slack-like emoji support
-
-# Install macOS apps for communication
-cask "slack"
-cask "zoom"
-mas "Shush", id: 496437906
-
-# Install macOS apps for project/business management
-mas "Things", id: 904280696
-cask "dropbox"
 cask "obsidian"
-cask "adobe-creative-cloud"
+cask "rocket" # system-wide slack-like emoji support
 EOF
 
 ran_brew=true
@@ -175,6 +169,21 @@ ran_brew=true
 # Set Karabiner preferences to load from Dropbox
 rm -rf ~/.config/karabiner
 ln -s ~/Dropbox/App\ Settings/karabiner ~/.config
+fi
+
+# Install essential apps via homebrew
+if [ "$homebrew_work" != "${homebrew_work#[Yy]}" ]; then
+    echo "Running brewfile to install apps for utility, communication, and PM.\n"
+    brew bundle install --file=- <<EOF
+# Install macOS apps for work
+cask "slack"
+cask "zoom"
+mas "Shush", id: 496437906
+mas "Things", id: 904280696
+cask "adobe-creative-cloud"
+EOF
+
+ran_brew=true
 fi
 
 ###############################################################################
