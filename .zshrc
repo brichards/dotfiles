@@ -124,3 +124,8 @@ function deploy() {
 		terminus env:deploy $SITE.$1;
 	fi
 }
+
+function webm2mp4() {
+	echo "\nConverting $@ to ${@%.*}.mp4\n"
+	ffmpeg -i $@ -c:v copy ${@%.*}.mp4
+}
