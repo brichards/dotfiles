@@ -365,6 +365,7 @@ brew "yt-dlp"
 cask "obs"
 cask "obs-ndi"
 cask "screenflow"
+cask "vlc"
 EOF
 
 ran_brew=true
