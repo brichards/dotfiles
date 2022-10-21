@@ -370,6 +370,10 @@ brew "mpv"
 brew "youtube-dl"
 brew "yt-dlp"
 
+# Include Don Melton's video transcoding tools
+# https://github.com/donmelton/video_transcoding
+sudo gem install video_transcoding
+
 # Install macOS apps for video production
 cask "obs"
 cask "obs-ndi"
