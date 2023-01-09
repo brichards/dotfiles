@@ -98,6 +98,20 @@ function wpinstall() {
 	wp login as brian --launch;
 }
 
+# Individually update and commit plugins on a WP site
+function pluginupdate() {
+	for plugin in $(wp plugin list --update=available --fields=name,version,update_version --format=csv);
+	do
+		IFS="," read -r name old new <<< "$plugin"
+		if [ $name = "name" ]; then
+			continue
+		fi
+		wp plugin update $name &&
+		git add -A ./wp-content/plugins/$name &&
+		git commit -m "Update plugin $name from $old to $new"
+	done;
+}
+
 # Import the production database from Pantheon
 function dbsync() {
 	SITE=${PWD##*/};
