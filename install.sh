@@ -161,6 +161,7 @@ cask "dropbox"
 cask "droplr"
 cask "karabiner-elements"
 cask "obsidian"
+brew "toland-qlmarkdown" # QuickLook support for .md files
 cask "rocket" # system-wide slack-like emoji support
 EOF
 
@@ -336,7 +337,7 @@ ran_brew=true
 
     # Install WordPress Coding Standards
     echo "Installing PHPCS with WP Coding Standards.\n"
-    composer global require squizlabs/php_codesniffer 
+    composer global require squizlabs/php_codesniffer
     composer global require friendsofphp/php-cs-fixer
     composer global require yoast/phpunit-polyfills
     composer global require phpcompatibility/phpcompatibility-wp:"*"
