@@ -28,7 +28,7 @@
     ; Branching
     br = branch
     co = checkout
-    com = checkout master
+    com = "!git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')" ; gets the main/default branch name
     cob = checkout -b
 
     ; pushing
@@ -36,11 +36,11 @@
     pf = push --force
 
     ; rebasing
-    ro = rebase origin/master
-    roi = rebase -i origin/master
-    fr = "!git fetch origin master && git rebase origin/master"
-    fri = "fetch origin/master && git rebase -i origin/master"
-    move = "!f(){ CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-'$CURRENT@{u}'} && git rebase --onto ${2-master} $CURRENT; }; f"
+    ro = "!git rebase origin/$(git symbolic-ref --short HEAD);" ; rebase current branch from origin
+    roi = "!git rebase -i origin/$(git symbolic-ref --short HEAD);" ; interactively rebase current branch from origin
+    fr = "!f(){ CURRENT=$(git symbolic-ref --short HEAD); git fetch origin $CURRENT && git rebase origin/$CURRENT; }; f" ; fetch and rebase current branch from origin
+    fri = "!f(){ CURRENT=$(git symbolic-ref --short HEAD); git fetch origin $CURRENT && git rebase -i origin/$CURRENT; }; f" ; fetch and interactively rebase current branch from origin
+    move = "!f(){ CURRENT=$(git symbolic-ref --short HEAD); git checkout -b $1 && git branch --force $CURRENT ${3-'$CURRENT@{u}'} && git rebase --onto ${2-main} $CURRENT; }; f"
 
     ; reset
     r = reset
