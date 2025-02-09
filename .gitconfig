@@ -90,7 +90,7 @@
 
 ; Environment
 [core]
-	editor = code
+	editor = code -n -w
 	symlinks = true
 	filemode = false
 	filemode = false
