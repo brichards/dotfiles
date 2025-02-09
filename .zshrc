@@ -7,6 +7,9 @@ export PATH=$PATH:/usr/local/git/bin
 # Include Composer binaries
 export PATH=$PATH:~/.composer/vendor/bin
 
+# Include Go binaries
+export PATH=$PATH:~/go/bin
+
 # Include WP-CLI binaries
 export PATH=$PATH:~/.wp-cli/bin
 
