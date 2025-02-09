@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-
-# ~/.macos — https://mths.be/
-# Source: https://github.com/mathiasbynens/dotfiles/blob/master/.macos
+# Usage:  sh -c "$(curl -fsSL https://raw.githubusercontent.com/brichards/dotfiles/HEAD/install-macos-prefs.sh)" 
+# Forked from https://github.com/mathiasbynens/dotfiles/blob/master/.macos
 # See https://www.shell-tips.com/mac/defaults/
 # See https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/
 
@@ -228,8 +227,8 @@ defaults write com.apple.finder DisableAllAnimations -bool true
 # Set Desktop as the default location for new Finder windows
 # For Desktop, use `PfDe` and `file://${HOME}/Desktop/`
 # For other paths, use `PfLo` and `file:///full/path/here/`
-defaults write com.apple.finder NewWindowTarget -string "PfLo"
-defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Dropbox/"
+defaults write com.apple.finder NewWindowTarget -string "PfDe"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
 
 # Hide icons for hard drives, servers, and removable media on the desktop
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false

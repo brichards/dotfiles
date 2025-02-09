@@ -1,4 +1,5 @@
 #!/bin/sh
+# Usage: sh -c "$(curl -fsSL https://raw.githubusercontent.com/brichards/dotfiles/HEAD/install.sh)"
 # Forked from https://github.com/afragen/mac-clean-install
 
 # First, grab the script's working directory
@@ -20,22 +21,27 @@ sudo -v;
 ###############################################################################
 
 # Ask in advance about which sections to execute
-default_computer_name=$(sudo defaults read /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName)
-read -p "Set new computer name [$default_computer_name]" computer_name
-computer_name=${computer_name:-$default_computer_name}
-computer_name_safe=$( echo $computer_name | sed 's/[\ \.]/-/g' )
 
-read -p "Install basic utilities for homebrew (including cask, mas, coreutils, etc.) ([y]/n)? " homebrew_utils
-homebrew_utils=${homebrew_utils:-y}
+read -p "Install CLI utilities like XCode and homebrew (including cask, mas, coreutils, etc.) ([y]/n)? " cli_utils
+cli_utils=${cli_utils:-y}
 
-read -p "Install essential apps for utility ([y]/n)? " homebrew_apps
-homebrew_apps=${homebrew_apps:-y}
+read -p "Install essential utilities (1Pass, Obsidian, Raycast, etc) ([y]/n)? " essential_apps
+essential_apps=${essential_apps:-y}
 
-read -p "Install work apps (Adobe CC, Slack, Things, Zoom, Shush) ([y]/n)? " homebrew_work
-homebrew_work=${homebrew_work:-y}
+read -p "Install work apps (Adobe CC, Slack, Things, Zoom, etc) ([y]/n)? " work_apps
+work_apps=${work_apps:-y}
 
-read -p "Install general develompent tools like git, gh, npm, yarn, etc. ([y]/n)? " homebrew_dev
-homebrew_dev=${homebrew_dev:-y}
+read -p "Install AV tooling (Audio Hijack, Ecamm Live, Elgato apps, etc) ([y]/n)? " av_tools
+av_tools=${av_tools:-y}
+
+read -p "Install video production tools ([y]/n)? " video_tools
+video_tools=${video_tools:-y}
+
+read -p "Install general develompent tools like git, gh, npm, yarn, etc. ([y]/n)? " dev_tools
+dev_tools=${dev_tools:-y}
+
+read -p "Install web development tools ([y]/n)? " web_tools
+web_tools=${web_tools:-y}
 
 if [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
     read -p "Generate ed25519 SSH key (for GitHub, mainly) ([y]/n)? " ssh_ed25519
@@ -58,16 +64,16 @@ fi
 read -p "Install personal dotfiles ([y]/n)? " dotfiles
 dotfiles=${dotfiles:-y}
 
-read -p "Install web development tools ([y]/n)? " homebrew_webdev
-homebrew_webdev=${homebrew_webdev:-y}
-
-read -p "Install video production tools ([y]/n)? " homebrew_video
-homebrew_video=${homebrew_video:-y}
-
 read -p "Update macOS and app preferences ([y]/n)? " macos_prefs
 macos_prefs=${macos_prefs:-y}
 
 ###############################################################################
+
+# Get computer name
+default_computer_name=$(sudo defaults read /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName)
+read -p "Set new computer name [$default_computer_name]" computer_name
+computer_name=${computer_name:-$default_computer_name}
+computer_name_safe=$( echo $computer_name | sed 's/[\ \.]/-/g' )
 
 # Set computer name (as done via System Preferences → Sharing)
 if [ $computer_name != $default_computer_name ]; then
@@ -79,42 +85,33 @@ fi
 
 ###############################################################################
 
-# Install XCode (hard dependency for homebrew and other CLI utilities)
-if ! command -v git >/dev/null || ! command -v gcc >/dev/null; then
-    echo "Installing XCode.\n"
-    xcode-select --install
-fi
-
-###############################################################################
-
-# Create local Site's directory for web development
-if [ ! -d "$HOME/Sites/www/" ]; then
-    echo "Creating ~/Sites/www/ for local site development.\n"
-    mkdir -p ~/Sites/www
-fi
-
-###############################################################################
-
 # Track if we've run any brew commands for cleanup later
 ran_brew=false
-
-# Install Homebrew
-if ! command -v brew >/dev/null; then
-    echo "Installing Homebrew.\n"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    # Add brew command to ~/.zprofile (default machine bash profile) for future use (without ohmyzsh)
-    # eval the script for immediate use
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-
-    ran_brew=true
-fi
 
 ###############################################################################
 
 # Install basic CLI utilities via Homebrew
-if [ "$homebrew_utils" != "${homebrew_utils#[Yy]}" ]; then
+if [ "$cli_utils" != "${cli_utils#[Yy]}" ]; then
+
+    # Install XCode (hard dependency for homebrew and other CLI utilities)
+    if ! command -v git >/dev/null || ! command -v gcc >/dev/null; then
+        echo "Installing XCode.\n"
+        xcode-select --install
+    fi
+
+    # Install Homebrew
+    if ! command -v brew >/dev/null; then
+        echo "Installing Homebrew.\n"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # Add brew command to ~/.zprofile (default machine bash profile) for future use (without ohmyzsh)
+        # eval the script for immediate use
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+
+        ran_brew=true
+    fi
+
     echo "Running brewfile to handle baseline homebrew config.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
@@ -127,16 +124,15 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/services"
-tap "pantheon-systems/external"
-tap "sass/sass"
 
 # Install homebrew-managed libraries
 brew "cask"
-brew "mas"
+brew "mas" # mac appstore installer
 
 # Install essential CLI utilities
 brew "coreutils"
 brew "findutils"
+brew "jq"
 brew "libtool"
 brew "tree"
 brew "wget"
@@ -148,40 +144,118 @@ fi
 ###############################################################################
 
 # Install essential apps via homebrew
-if [ "$homebrew_apps" != "${homebrew_apps#[Yy]}" ]; then
-    echo "Running brewfile to install apps for utility, communication, and PM.\n"
+if [ "$essential_apps" != "${essential_apps#[Yy]}" ]; then
+    echo "Installing essential utilities.\n"
     brew bundle install --file=- <<EOF
+# Set root Applications directory as default location for app installations
+cask_args appdir: "/Applications"
+
 # Install macOS apps for utility
 cask "1password"
-mas "1Password for Safari", id: 1569813296
-cask "alfred"
+cask "backblaze"
 cask "bartender"
-cask "bettertouchtool"
 cask "dropbox"
-cask "droplr"
-cask "karabiner-elements"
 cask "obsidian"
+cask "raycast"
 brew "toland-qlmarkdown" # QuickLook support for .md files
-cask "rocket" # system-wide slack-like emoji support
+mas "1Password for Safari", id: 1569813296
+mas "Obsidian Web Clipper", id: 6720708363
+mas "Shush", id: 496437906
+mas "Wayback Machine", id: 1472432422
 EOF
 
 ran_brew=true
 
+# cask "karabiner-elements"
 # Set Karabiner preferences to load from Dropbox
-rm -rf ~/.config/karabiner
-ln -s ~/Dropbox/App\ Settings/karabiner ~/.config
+# rm -rf ~/.config/karabiner
+# ln -s ~/Dropbox/App\ Settings/karabiner ~/.config
 fi
 
-# Install essential apps via homebrew
-if [ "$homebrew_work" != "${homebrew_work#[Yy]}" ]; then
+###############################################################################
+
+# Install work and comms apps via homebrew
+if [ "$work_apps" != "${work_apps#[Yy]}" ]; then
     echo "Running brewfile to install apps for utility, communication, and PM.\n"
     brew bundle install --file=- <<EOF
+# Set root Applications directory as default location for app installations
+cask_args appdir: "/Applications"
+
 # Install macOS apps for work
-cask "slack"
-cask "zoom"
-mas "Shush", id: 496437906
 mas "Things", id: 904280696
 cask "adobe-creative-cloud"
+cask "discord"
+cask "notion"
+cask "sf-symbols"
+cask "slack"
+cask "zoom"
+EOF
+
+ran_brew=true
+fi
+
+###############################################################################
+
+# Install A/V apps
+if [ "$av_tools" != "${av_tools#[Yy]}" ]; then
+    echo "Running brewfile to install A/V and Elgato Apps.\n"
+    brew bundle install --file=- <<EOF
+# Set root Applications directory as default location for app installations
+cask_args appdir: "/Applications"
+
+# Install Elgato apps
+cask "audio-hijack"
+cask "ecamm-live"
+cask "elgato-camera-hub"
+cask "elgato-control-center"
+cask "elgato-stream-deck"
+cask "loopback"
+EOF
+
+ran_brew=true
+fi
+
+###############################################################################
+
+# Install video production tools via homebrew
+if [ "$video_tools" != "${video_tools#[Yy]}" ]; then
+    echo "Running brewfile to install video formulae.\n"
+    brew bundle install --file=- <<EOF
+# Set root Applications directory as default location for app installations
+cask_args appdir: "/Applications"
+
+# Install video manipulation utilities
+brew "ffmpeg"
+brew "mkvtoolnix"
+brew "mp4v2"
+brew "mpv"
+brew "yt-dlp"
+
+# Libraries for media files
+brew "little-cms2"
+brew "libass"
+brew "libavif"
+brew "libtiff"
+brew "jpeg-xl"
+brew "webp"
+
+# Install video ripping utilities
+cask "makemkv"
+cask "vlc"
+
+# Include video transcoding tools
+# https://github.com/lisamelton/video_transcoding
+sudo gem install video_transcoding
+
+# Install macOS apps for video production
+cask "descript"
+cask "losslesscut"
+cask "obs"
+cask "obs-ndi"
+cask "libndi"
+cask "distroav"
+cask "recut"
+cask "screenflow"
 EOF
 
 ran_brew=true
@@ -190,7 +264,7 @@ fi
 ###############################################################################
 
 # Install general dev tools via homebrew
-if [ "$homebrew_dev" != "${homebrew_dev#[Yy]}" ]; then
+if [ "$dev_tools" != "${dev_tools#[Yy]}" ]; then
     echo "Running brewfile to install general dev formulae.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
@@ -203,11 +277,43 @@ brew "node"
 brew "yarn"
 brew "composer"
 brew "ruby"
+brew "python"
 
 # Install macOS apps for development
 cask "iterm2"
 cask "font-menlo-for-powerline"
 cask "visual-studio-code"
+
+# Install VS Code extensions
+vscode "adamcaviness.theme-monokai-dark-soda"
+vscode "bmewburn.vscode-intelephense-client"
+vscode "bradlc.vscode-tailwindcss"
+vscode "chouzz.vscode-better-align"
+vscode "dbaeumer.vscode-eslint"
+vscode "eamodio.gitlens"
+vscode "editorconfig.editorconfig"
+vscode "equinusocio.vsc-material-theme"
+vscode "equinusocio.vsc-material-theme-icons"
+vscode "ericadamski.carbon-now-sh"
+vscode "esbenp.prettier-vscode"
+vscode "formulahendry.auto-rename-tag"
+vscode "igorsbitnev.error-gutters"
+vscode "ikappas.phpcs"
+vscode "jock.svg"
+vscode "johnbillion.vscode-wordpress-hooks"
+vscode "kenhowardpdx.vscode-gist"
+vscode "mechatroner.rainbow-csv"
+vscode "ms-python.isort"
+vscode "ms-python.python"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode.sublime-keybindings"
+vscode "neilbrayfield.php-docblocker"
+vscode "persoderlind.vscode-phpcbf"
+vscode "pkief.material-icon-theme"
+vscode "rafamel.subtle-brackets"
+vscode "spaceribs.webvtt-language"
+vscode "wordpresstoolbox.wordpress-toolbox"
+vscode "yummygum.city-lights-icon-vsc"
 EOF
 
 ran_brew=true
@@ -215,64 +321,17 @@ fi
 
 ###############################################################################
 
-# Generate SSH keys
-if [ "$ssh_ed25519" != "${ssh_ed25519#[Yy]}" ]; then
-    echo "Generating ed25519 SSH key and adding to keychain.\n"
-    ssh-keygen -t ed25519 -C "brian@rzen.net"
-    ssh-add ~/.ssh/id_ed25519
-fi
-if [ "$ssh_rsa" != "${ssh_rsa#[Yy]}" ]; then
-    echo "Generating RSA SSH key and adding to keychain.\n"
-    ssh-keygen
-    ssh-add ~/.ssh/id_rsa
-fi
-
-###############################################################################
-
-# Add SSH key to GitHub
-if [ "$setup_github" != "${setup_github#[Yy]}" ]; then
-    gh auth login
-fi
-
-###############################################################################
-
-# Install Oh My ZSH! and plugins
-if [ "$ohmyzsh" != "${ohmyzsh#[Yy]}" ]; then
-    echo "Installing Oh My ZSH!\n"
-
-    if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
-        # run via Zsh
-        zsh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
-        # run via Bash
-        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    fi
-    git clone git@github.com:zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-    git clone git@github.com:zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-    git clone git@github.com:joel-porquet/zsh-dircolors-solarized $ZSH_CUSTOM/plugins/zsh-dircolors-solarized
-fi
-
-# Add personal dotfiles via github
-if [ "$dotfiles" != "${dotfiles#[Yy]}" ]; then
-    echo "Installing personal dotfiles.\n"
-    if [ ! $SCRIPT_DIR -ef ~/.dotfiles ]; then
-        git clone git@github.com:brichards/dotfiles.git ~/.dotfiles
-    fi
-    ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
-    ln -s ~/.dotfiles/.zshrc ~/.zshrc
-    ln -s ~/.dotfiles/eslintrc.json ~/Sites/www/eslintrc.json
-    ln -s ~/.dotfiles/wp-cli.yml ~/Sites/www/wp-cli.yml
-    source ~/.zshrc
-fi
-
-###############################################################################
-
 # Install web dev tools
-if [ "$homebrew_webdev" != "${homebrew_webdev#[Yy]}" ]; then
+if [ "$web_tools" != "${web_tools#[Yy]}" ]; then
 
     # Install web dev utilities via homebrew
     echo "Running brewfile to install web dev formulae.\n"
     brew bundle install --file=- <<EOF
+
+# Tap additional homebrew repos
+tap "pantheon-systems/external"
+tap "sass/sass"
+
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
 
@@ -281,10 +340,9 @@ brew "dnsmasq"
 brew "nginx"
 brew "nghttp2"
 brew "openssl"
-brew "mysql", restart_service: true
+brew "mysql", restart_service: :changed
 brew "redis", restart_service: :changed
-brew "php", link: false
-brew "php@7.4", link: true
+brew "php", restart_service: :changed
 brew "phpunit", link: false
 brew "wp-cli"
 brew "sass/sass/sass"
@@ -306,6 +364,12 @@ ran_brew=true
 
     # Install Terminus rsync plugin
     terminus self:plugin:install terminus-rsync-plugin
+
+    # Create local Site's directory for web development
+    if [ ! -d "$HOME/Sites/www/" ]; then
+        echo "Creating ~/Sites/www/ for local site development.\n"
+        mkdir -p ~/Sites/www
+    fi
 
     # Install Laravel Valet (https://laravel.com/docs/9.x/valet#installation)
     if [ ! command -v valet >/dev/null ]; then
@@ -356,33 +420,41 @@ fi
 
 ###############################################################################
 
-# Install video production tools via homebrew
-if [ "$homebrew_video" != "${homebrew_video#[Yy]}" ]; then
-    echo "Running brewfile to install video formulae.\n"
-    brew bundle install --file=- <<EOF
-# Set root Applications directory as default location for app installations
-cask_args appdir: "/Applications"
+# Generate SSH keys
+if [ "$ssh_ed25519" != "${ssh_ed25519#[Yy]}" ]; then
+    echo "Generating ed25519 SSH key and adding to keychain.\n"
+    ssh-keygen -t ed25519 -C "brian@rzen.net"
+    ssh-add ~/.ssh/id_ed25519
+fi
+if [ "$ssh_rsa" != "${ssh_rsa#[Yy]}" ]; then
+    echo "Generating RSA SSH key and adding to keychain.\n"
+    ssh-keygen
+    ssh-add ~/.ssh/id_rsa
+fi
 
-# Install video manipulation utilities
-brew "ffmpeg"
-brew "mkvtoolnix"
-brew "mp4v2"
-brew "mpv"
-brew "youtube-dl"
-brew "yt-dlp"
+###############################################################################
 
-# Include Don Melton's video transcoding tools
-# https://github.com/donmelton/video_transcoding
-sudo gem install video_transcoding
+# Add SSH key to GitHub
+if [ "$setup_github" != "${setup_github#[Yy]}" ]; then
+    gh auth login
+fi
 
-# Install macOS apps for video production
-cask "obs"
-cask "obs-ndi"
-cask "screenflow"
-cask "vlc"
-EOF
+###############################################################################
 
-ran_brew=true
+# Install Oh My ZSH! and plugins
+if [ "$ohmyzsh" != "${ohmyzsh#[Yy]}" ]; then
+    echo "Installing Oh My ZSH!\n"
+
+    if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
+        # run via Zsh
+        zsh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    elif [ -n "`$SHELL -c 'echo $BASH_VERSION'`" ]; then
+        # run via Bash
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    fi
+    git clone git@github.com:zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+    git clone git@github.com:zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+    git clone git@github.com:joel-porquet/zsh-dircolors-solarized $ZSH_CUSTOM/plugins/zsh-dircolors-solarized
 fi
 
 ###############################################################################
@@ -394,11 +466,26 @@ fi
 
 ###############################################################################
 
+# Add personal dotfiles via github
+if [ "$dotfiles" != "${dotfiles#[Yy]}" ]; then
+    echo "Installing personal dotfiles.\n"
+    if [ ! $SCRIPT_DIR -ef ~/.dotfiles ]; then
+        git clone git@github.com:brichards/dotfiles.git ~/.dotfiles
+    fi
+    ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
+    ln -s ~/.dotfiles/.zshrc ~/.zshrc
+    ln -s ~/.dotfiles/eslintrc.json ~/Sites/www/eslintrc.json
+    ln -s ~/.dotfiles/wp-cli.yml ~/Sites/www/wp-cli.yml
+    source ~/.zshrc
+fi
+
+###############################################################################
+
 # Update macOS System Prefs
 if [ "$macos_prefs" != "${macos_prefs#[Yy]}" ]; then
     if [ $SCRIPT_DIR -ef ~/.dotfiles ]; then
         sh ~/.dotfiles/install-macos-prefs.sh
     else
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/brichards/dotfiles/master/install-macos-prefs.sh)"
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/brichards/dotfiles/HEAD/install-macos-prefs.sh)"
     fi
 fi
