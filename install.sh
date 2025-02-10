@@ -106,8 +106,9 @@ if [ "$cli_utils" != "${cli_utils#[Yy]}" ]; then
 
         # Add brew command to ~/.zprofile (default machine bash profile) for future use (without ohmyzsh)
         # eval the script for immediate use
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        echo >> /Users/brian/.zprofile
+        echo 'eval "$(/usr/local/bin/brew shellenv)"' >> /Users/brian/.zprofile
+        eval "$(/usr/local/bin/brew shellenv)"
 
         ran_brew=true
     fi
@@ -119,10 +120,6 @@ cask_args appdir: "/Applications"
 
 # Tap additional repos for homebrew to track for installations
 tap "homebrew/bundle"
-tap "homebrew/core"
-tap "homebrew/cask"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 
 # Install homebrew-managed libraries
@@ -157,10 +154,10 @@ cask "bartender"
 cask "dropbox"
 cask "obsidian"
 cask "raycast"
-brew "toland-qlmarkdown" # QuickLook support for .md files
+cask "toland-qlmarkdown" # QuickLook support for .md files
 mas "1Password for Safari", id: 1569813296
 mas "Obsidian Web Clipper", id: 6720708363
-mas "Shush", id: 496437906
+mas "Hush Nag Blocker", id: 1544743900
 mas "Wayback Machine", id: 1472432422
 EOF
 
@@ -219,7 +216,7 @@ fi
 
 # Install video production tools via homebrew
 if [ "$video_tools" != "${video_tools#[Yy]}" ]; then
-    echo "Running brewfile to install video formulae.\n"
+    echo "Running brewfile to install video tools.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
@@ -243,10 +240,6 @@ brew "webp"
 cask "makemkv"
 cask "vlc"
 
-# Include video transcoding tools
-# https://github.com/lisamelton/video_transcoding
-sudo gem install video_transcoding
-
 # Install macOS apps for video production
 cask "descript"
 cask "losslesscut"
@@ -259,6 +252,11 @@ cask "screenflow"
 EOF
 
 ran_brew=true
+
+# Include video transcoding tools
+# https://github.com/lisamelton/video_transcoding
+echo "Installing lisamelton transcoding tools.\n"
+sudo gem install video_transcoding
 fi
 
 ###############################################################################
@@ -277,7 +275,7 @@ brew "node"
 brew "yarn"
 brew "composer"
 brew "ruby"
-brew "python"
+# brew "python"
 
 # Install macOS apps for development
 cask "iterm2"
@@ -350,11 +348,6 @@ brew "pantheon-systems/external/terminus"
 brew "rclone"
 brew "rsync"
 
-# Install macOS browsers
-cask "firefox"
-cask "google-chrome"
-cask "hush" # silences cookie/privacy notices in Safari
-
 # Install macOS dev apps
 cask "postman"
 cask "tableplus"
@@ -376,7 +369,6 @@ ran_brew=true
         echo "Installing and configuring Laravel Valet.\n"
         composer global require laravel/valet
         valet install
-        valet use php@7.4
         cd ~/Sites/www
         valet park
     fi
@@ -483,6 +475,7 @@ fi
 
 # Update macOS System Prefs
 if [ "$macos_prefs" != "${macos_prefs#[Yy]}" ]; then
+    echo "Triggering install-macos-prefs.\n"
     if [ $SCRIPT_DIR -ef ~/.dotfiles ]; then
         sh ~/.dotfiles/install-macos-prefs.sh
     else
