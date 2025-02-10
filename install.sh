@@ -154,7 +154,6 @@ cask "bartender"
 cask "dropbox"
 cask "obsidian"
 cask "raycast"
-cask "toland-qlmarkdown" # QuickLook support for .md files
 mas "1Password for Safari", id: 1569813296
 mas "Obsidian Web Clipper", id: 6720708363
 mas "Hush Nag Blocker", id: 1544743900
@@ -227,14 +226,6 @@ brew "mkvtoolnix"
 brew "mp4v2"
 brew "mpv"
 brew "yt-dlp"
-
-# Libraries for media files
-brew "little-cms2"
-brew "libass"
-brew "libavif"
-brew "libtiff"
-brew "jpeg-xl"
-brew "webp"
 
 # Install video ripping utilities
 cask "makemkv"
@@ -451,24 +442,24 @@ fi
 
 ###############################################################################
 
-# Cleanup any lost vestigials after all homebrew installations
-if [ "$ran_brew" = true ]; then
-    brew update && brew upgrade && brew cleanup && brew doctor
-fi
-
-###############################################################################
-
 # Add personal dotfiles via github
 if [ "$dotfiles" != "${dotfiles#[Yy]}" ]; then
     echo "Installing personal dotfiles.\n"
     if [ ! $SCRIPT_DIR -ef ~/.dotfiles ]; then
         git clone git@github.com:brichards/dotfiles.git ~/.dotfiles
     fi
-    ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
-    ln -s ~/.dotfiles/.zshrc ~/.zshrc
-    ln -s ~/.dotfiles/eslintrc.json ~/Sites/www/eslintrc.json
-    ln -s ~/.dotfiles/wp-cli.yml ~/Sites/www/wp-cli.yml
+    ln -sf ~/.dotfiles/.gitconfig ~/.gitconfig
+    ln -sf ~/.dotfiles/.zshrc ~/.zshrc
+    ln -sf ~/.dotfiles/eslintrc.json ~/Sites/www/eslintrc.json
+    ln -sf ~/.dotfiles/wp-cli.yml ~/Sites/www/wp-cli.yml
     source ~/.zshrc
+fi
+
+###############################################################################
+
+# Cleanup any lost vestigials after all homebrew installations
+if [ "$ran_brew" = true ]; then
+    brew update && brew upgrade && brew cleanup && brew doctor
 fi
 
 ###############################################################################
