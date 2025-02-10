@@ -355,9 +355,12 @@ ran_brew=true
         mkdir -p ~/Sites/www
     fi
 
+    # Add composer binaries to path
+    PATH=$PATH:~/.composer/vendor/bin
+
     # Install Laravel Valet (https://laravel.com/docs/9.x/valet#installation)
-    if [ ! command -v valet >/dev/null ]; then
-        echo "Installing and configuring Laravel Valet.\n"
+    if ! command -v valet >/dev/null; then
+        echo "\nInstalling and configuring Laravel Valet.\n"
         composer global require laravel/valet
         valet install
         cd ~/Sites/www
@@ -383,14 +386,13 @@ ran_brew=true
     wp package install wp-cli/scaffold-package-command
 
     # Install WordPress Coding Standards
-    echo "Installing PHPCS with WP Coding Standards.\n"
-    composer global require squizlabs/php_codesniffer
-    composer global require friendsofphp/php-cs-fixer
-    composer global require yoast/phpunit-polyfills
-    composer global require phpcompatibility/phpcompatibility-wp:"*"
-    git clone -b master git@github.com:WordPress/WordPress-Coding-Standards.git ~/Sites/wpcs
-
-    # Get existing PHPCS isntall paths (just in case they already exist)
+    echo "\nInstalling PHPCS with WP Coding Standards.\n"
+    composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+    composer global require --dev wp-coding-standards/wpcs
+    composer global require --dev friendsofphp/php-cs-fixer
+    composer global require --dev yoast/phpunit-polyfills
+    
+    # Get existing PHPCS isntall paths (if they already exist)
     phpcs_install_config=$(phpcs --config-show installed_paths);
     phpcs_install_paths=${phpcs_install_config##*:};
 
