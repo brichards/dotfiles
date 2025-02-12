@@ -49,7 +49,7 @@ if [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
 fi
 
 if [ ! -f "$HOME/.ssh/id_rsa.pub" ]; then
-    read -p "Generate RSA SSH key (for virtually everywhere else) ([y]/n)? " ssh_rsa
+    read -p "Generate RSA SSH key ([y]/n)? " ssh_rsa
     ssh_rsa=${ssh_rsa:-y}
 fi
 
@@ -414,7 +414,7 @@ if [ "$ssh_ed25519" != "${ssh_ed25519#[Yy]}" ]; then
 fi
 if [ "$ssh_rsa" != "${ssh_rsa#[Yy]}" ]; then
     echo "\nGenerating RSA SSH key and adding to keychain.\n"
-    ssh-keygen
+    ssh-keygen -t rsa -b 4096 -C "brian@rzen.net"
     ssh-add ~/.ssh/id_rsa
 fi
 
