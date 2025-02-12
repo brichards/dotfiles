@@ -10,7 +10,7 @@ cd ~
 
 # Add TouchID support for sudo (if not already added)
 if ! grep -Fq "pam_tid.so" /etc/pam.d/sudo; then
-    echo "Adding TouchID support to sudo."
+    echo "\nAdding TouchID support to sudo.\n"
     (echo "auth       sufficient     pam_tid.so" && cat /etc/pam.d/sudo) > /tmp/sudo_pam_tid.so
     sudo mv /tmp/sudo_pam_tid.so /etc/pam.d/sudo
 fi
@@ -95,13 +95,13 @@ if [ "$cli_utils" != "${cli_utils#[Yy]}" ]; then
 
     # Install XCode (hard dependency for homebrew and other CLI utilities)
     if ! command -v git >/dev/null || ! command -v gcc >/dev/null; then
-        echo "Installing XCode.\n"
+        echo "\nInstalling XCode.\n"
         xcode-select --install
     fi
 
     # Install Homebrew
     if ! command -v brew >/dev/null; then
-        echo "Installing Homebrew.\n"
+        echo "\nInstalling Homebrew.\n"
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
         # Add brew command to ~/.zprofile (default machine bash profile) for future use (without ohmyzsh)
@@ -113,7 +113,7 @@ if [ "$cli_utils" != "${cli_utils#[Yy]}" ]; then
         ran_brew=true
     fi
 
-    echo "Running brewfile to handle baseline homebrew config.\n"
+    echo "\nInstalling brew bundles and core utilities.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
@@ -142,7 +142,7 @@ fi
 
 # Install essential apps via homebrew
 if [ "$essential_apps" != "${essential_apps#[Yy]}" ]; then
-    echo "Installing essential utilities.\n"
+    echo "\nInstalling essential macOS utilities.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
@@ -172,7 +172,7 @@ fi
 
 # Install work and comms apps via homebrew
 if [ "$work_apps" != "${work_apps#[Yy]}" ]; then
-    echo "Running brewfile to install apps for utility, communication, and PM.\n"
+    echo "\nInstalling work and communication apps.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
@@ -194,7 +194,7 @@ fi
 
 # Install A/V apps
 if [ "$av_tools" != "${av_tools#[Yy]}" ]; then
-    echo "Running brewfile to install A/V and Elgato Apps.\n"
+    echo "\nInstalling A/V Tooling.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
@@ -215,7 +215,7 @@ fi
 
 # Install video production tools via homebrew
 if [ "$video_tools" != "${video_tools#[Yy]}" ]; then
-    echo "Running brewfile to install video tools.\n"
+    echo "\nInstalling CLI utilities and apps for video editing.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
@@ -246,7 +246,7 @@ ran_brew=true
 
 # Include video transcoding tools
 # https://github.com/lisamelton/video_transcoding
-echo "Installing lisamelton transcoding tools.\n"
+echo "\nInstalling video transcoding tools.\n"
 sudo gem install video_transcoding
 fi
 
@@ -254,7 +254,7 @@ fi
 
 # Install general dev tools via homebrew
 if [ "$dev_tools" != "${dev_tools#[Yy]}" ]; then
-    echo "Running brewfile to install general dev formulae.\n"
+    echo "\nInstalling general development tooling.\n"
     brew bundle install --file=- <<EOF
 # Set root Applications directory as default location for app installations
 cask_args appdir: "/Applications"
@@ -314,7 +314,7 @@ fi
 if [ "$web_tools" != "${web_tools#[Yy]}" ]; then
 
     # Install web dev utilities via homebrew
-    echo "Running brewfile to install web dev formulae.\n"
+    echo "\nInstalling web development tooling.\n"
     brew bundle install --file=- <<EOF
 
 # Tap additional homebrew repos
@@ -351,7 +351,7 @@ ran_brew=true
 
     # Create local Site's directory for web development
     if [ ! -d "$HOME/Sites/www/" ]; then
-        echo "Creating ~/Sites/www/ for local site development.\n"
+        echo "\nCreating ~/Sites/www/ for local site development.\n"
         mkdir -p ~/Sites/www
     fi
 
@@ -359,7 +359,7 @@ ran_brew=true
     PATH=$PATH:~/.composer/vendor/bin
 
     # Install Laravel Valet (https://laravel.com/docs/9.x/valet#installation)
-    if ! command -v valet >/dev/null; then
+    if ! command -v valet 2>&1 >/dev/null; then
         echo "\nInstalling and configuring Laravel Valet.\n"
         composer global require laravel/valet
         valet install
@@ -373,7 +373,7 @@ ran_brew=true
     npm install vercel -g
 
     # Add additional packages for WP-CLI
-    echo "Installing additional WP-CLI packages.\n"
+    echo "\nInstalling additional WP-CLI packages.\n"
     wp package install aaemnnosttv/wp-cli-login-command
     wp package install aaemnnosttv/wp-cli-valet-command
     wp package install brichards/wp-cli-random-content
@@ -385,8 +385,8 @@ ran_brew=true
     wp package install wp-cli/restful
     wp package install wp-cli/scaffold-package-command
 
-    # Install WordPress Coding Standards
-    echo "\nInstalling PHPCS with WP Coding Standards.\n"
+    # Install WordPress Coding Standards and tests
+    echo "\n\nInstalling PHPCS with WP Coding Standards.\n"
     composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
     composer global require --dev wp-coding-standards/wpcs
     composer global require --dev friendsofphp/php-cs-fixer
@@ -395,7 +395,7 @@ ran_brew=true
     # Get existing PHPCS isntall paths (if they already exist)
     phpcs_install_config=$(phpcs --config-show installed_paths);
     phpcs_install_paths=${phpcs_install_config##*:};
-
+    
     # Append our new install paths for WPCS and PHPCompatibility to the existing install path(s)
     phpcs --config-set installed_paths ${phpcs_install_paths},"$HOME/Sites/wpcs","$HOME/.composer/vendor/phpcompatibility/php-compatibility","$HOME/.composer/vendor/phpcompatibility/phpcompatibility-paragonie","$HOME/.composer/vendor/phpcompatibility/phpcompatibility-wp"
 
@@ -407,12 +407,12 @@ fi
 
 # Generate SSH keys
 if [ "$ssh_ed25519" != "${ssh_ed25519#[Yy]}" ]; then
-    echo "Generating ed25519 SSH key and adding to keychain.\n"
+    echo "\nGenerating ed25519 SSH key and adding to keychain.\n"
     ssh-keygen -t ed25519 -C "brian@rzen.net"
     ssh-add ~/.ssh/id_ed25519
 fi
 if [ "$ssh_rsa" != "${ssh_rsa#[Yy]}" ]; then
-    echo "Generating RSA SSH key and adding to keychain.\n"
+    echo "\nGenerating RSA SSH key and adding to keychain.\n"
     ssh-keygen
     ssh-add ~/.ssh/id_rsa
 fi
@@ -428,7 +428,7 @@ fi
 
 # Install Oh My ZSH! and plugins
 if [ "$ohmyzsh" != "${ohmyzsh#[Yy]}" ]; then
-    echo "Installing Oh My ZSH!\n"
+    echo "\nInstalling Oh My ZSH!\n"
 
     if [ -n "`$SHELL -c 'echo $ZSH_VERSION'`" ]; then
         # run via Zsh
@@ -446,7 +446,7 @@ fi
 
 # Add personal dotfiles via github
 if [ "$dotfiles" != "${dotfiles#[Yy]}" ]; then
-    echo "Installing personal dotfiles.\n"
+    echo "\nInstalling personal dotfiles.\n"
     if [ ! $SCRIPT_DIR -ef ~/.dotfiles ]; then
         git clone git@github.com:brichards/dotfiles.git ~/.dotfiles
     fi
@@ -468,7 +468,7 @@ fi
 
 # Update macOS System Prefs
 if [ "$macos_prefs" != "${macos_prefs#[Yy]}" ]; then
-    echo "Triggering install-macos-prefs.\n"
+    echo "\nTriggering install-macos-prefs.\n"
     if [ $SCRIPT_DIR -ef ~/.dotfiles ]; then
         sh ~/.dotfiles/install-macos-prefs.sh
     else
