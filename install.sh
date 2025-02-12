@@ -155,8 +155,9 @@ cask "dropbox"
 cask "obsidian"
 cask "raycast"
 mas "1Password for Safari", id: 1569813296
-mas "Obsidian Web Clipper", id: 6720708363
 mas "Hush Nag Blocker", id: 1544743900
+mas "Obsidian Web Clipper", id: 6720708363
+mas "Raycast Companion", id: 6738274497
 mas "Wayback Machine", id: 1472432422
 EOF
 
