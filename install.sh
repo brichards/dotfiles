@@ -437,9 +437,9 @@ if [ "$ohmyzsh" != "${ohmyzsh#[Yy]}" ]; then
         # run via Bash
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     fi
-    git clone git@github.com:zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-    git clone git@github.com:zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
-    git clone git@github.com:joel-porquet/zsh-dircolors-solarized $ZSH_CUSTOM/plugins/zsh-dircolors-solarized
+    gh repo clone zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+    gh repo clone zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+    gh repo clone joel-porquet/zsh-dircolors-solarized $ZSH_CUSTOM/plugins/zsh-dircolors-solarized
 fi
 
 ###############################################################################
@@ -448,7 +448,7 @@ fi
 if [ "$dotfiles" != "${dotfiles#[Yy]}" ]; then
     echo "\nInstalling personal dotfiles.\n"
     if [ ! $SCRIPT_DIR -ef ~/.dotfiles ]; then
-        git clone git@github.com:brichards/dotfiles.git ~/.dotfiles
+        gh repo clone brichards/dotfiles ~/.dotfiles
     fi
     ln -sf ~/.dotfiles/.gitconfig ~/.gitconfig
     ln -sf ~/.dotfiles/.zshrc ~/.zshrc
