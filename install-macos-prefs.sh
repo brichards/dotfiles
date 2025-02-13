@@ -435,6 +435,8 @@ find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -dele
 #defaults write com.apple.dock wvous-bl-corner -int 0
 #defaults write com.apple.dock wvous-bl-modifier -int 0
 
+defaults write com.apple.spaces span-displays -int 1
+
 ###############################################################################
 # Safari & WebKit                                                             #
 ###############################################################################
