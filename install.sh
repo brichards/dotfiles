@@ -231,6 +231,7 @@ brew "yt-dlp"
 # Install video ripping utilities
 cask "makemkv"
 cask "vlc"
+cask handbrake
 
 # Install macOS apps for video production
 cask "descript"
@@ -248,7 +249,31 @@ ran_brew=true
 # Include video transcoding tools
 # https://github.com/lisamelton/video_transcoding
 echo "\nInstalling video transcoding tools.\n"
-sudo gem install video_transcoding
+gh repo clone lisamelton/video_transcoding
+cd video_transcoding
+chmod +x transcode-video.rb
+chmod +x detect-crop.rb
+chmod +x convert-video.rb
+mv transcode-video.rb /usr/local/bin/transcode-video.rb
+mv detect-crop.rb /usr/local/bin/detect-crop.rb
+mv convert-video.rb /usr/local/bin/convert-video.rb
+cd ../
+rm -rf video_transcoding
+
+# Include more video transcoding tools (for 4K UHD content)
+# https://github.com/lisamelton/more-video-transcoding
+echo "\nInstalling additional video transcoding tools.\n"
+gh repo clone lisamelton/more-video-transcoding
+cd more-video-transcoding
+chmod +x hevc-transcode.rb
+chmod +x nvenc-hevc-transcode.rb
+mv hevc-transcode.rb /usr/local/bin/hevc-transcode.rb
+mv nvenc-hevc-transcode.rb /usr/local/bin/nvenc-hevc-transcode.rb
+cd ../
+rm -rf more-video-transcoding
+
+git clone https://github.com/lisamelton/other_video_transcoding.git
+chmod +x other-transcode.rb
 fi
 
 ###############################################################################
@@ -392,11 +417,11 @@ ran_brew=true
     composer global require --dev wp-coding-standards/wpcs
     composer global require --dev friendsofphp/php-cs-fixer
     composer global require --dev yoast/phpunit-polyfills
-    
+
     # Get existing PHPCS isntall paths (if they already exist)
     phpcs_install_config=$(phpcs --config-show installed_paths);
     phpcs_install_paths=${phpcs_install_config##*:};
-    
+
     # Append our new install paths for WPCS and PHPCompatibility to the existing install path(s)
     phpcs --config-set installed_paths ${phpcs_install_paths},"$HOME/Sites/wpcs","$HOME/.composer/vendor/phpcompatibility/php-compatibility","$HOME/.composer/vendor/phpcompatibility/phpcompatibility-paragonie","$HOME/.composer/vendor/phpcompatibility/phpcompatibility-wp"
 
