@@ -147,3 +147,26 @@ function webm2mp4() {
 	echo "\nConverting $@ to ${@%.*}.mp4\n"
 	ffmpeg -i $@ -c:v copy ${@%.*}.mp4
 }
+
+function splitepisodes() {
+	if [ -z "$1" ]; then
+		echo "Usage: splitepisodes <filename> [output] [season] [start_episode_number]"
+		return 1
+	fi
+
+	INPUT="$1"
+	OUTPUT="${2:-${INPUT%.*}-temp.mkv}"  # Default output name if not provided
+	SEASON="${3:-1}"  # Default to 1 if not provided
+	START_EPISODE="${4:-1}"  # Default to 1 if not provided
+
+	# Split at the chapter positions where each episode starts
+	mkvmerge -o "${OUTPUT}.mkv" --split chapters:5,9,13,17,21,25,29,33 "$INPUT"
+
+	# Rename output files
+	INDEX=0
+	for FILE in "${OUTPUT}"-*.mkv; do
+		EPISODE_NUM=$((START_EPISODE + INDEX))
+		mv "$FILE" "${OUTPUT}-s${SEASON}e${EPISODE_NUM}.mkv"
+		((INDEX++))
+	done
+}
