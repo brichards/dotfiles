@@ -61,3 +61,8 @@ ln -s ~/.dotfiles/eslintrc.json ~/Sites/www/eslintrc.json
 ln -s ~/.dotfiles/wp-cli.yml ~/Sites/www/wp-cli.yml
 source ~/.zshrc
 ```
+
+# Additional steps (for Pantheon access)
+- Generate a machine token for terminus: https://dashboard.pantheon.io/machine-token/create/
+- Add SSH key to Pantheon:
+    - `terminus ssh-key:add ~/.ssh/id_rsa.pub`
