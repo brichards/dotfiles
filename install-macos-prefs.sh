@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Usage:  sh -c "$(curl -fsSL https://raw.githubusercontent.com/brichards/dotfiles/HEAD/install-macos-prefs.sh)" 
+# Usage:  sh -c "$(curl -fsSL https://raw.githubusercontent.com/brichards/dotfiles/HEAD/install-macos-prefs.sh)"
 # Forked from https://github.com/mathiasbynens/dotfiles/blob/master/.macos
 # See https://www.shell-tips.com/mac/defaults/
 # See https://pawelgrzybek.com/change-macos-user-preferences-via-command-line/
@@ -156,30 +156,41 @@ defaults write com.apple.symbolichotkeys.plist AppleSymbolicHotKeys -dict-add 64
 ###############################################################################
 echo "Setting Energy Saving preferences."
 
-# Enable lid wakeup
-sudo pmset -a lidwake 1
-
 # Restart automatically on power loss
 sudo pmset -a autorestart 1
 
-# Sleep the display after 15 minutes
+# Sleep the display after 10 minutes
 sudo pmset -a displaysleep 10
 
-# Disable machine sleep while charging
+# Don't auto-sleep on AC power
 sudo pmset -c sleep 0
 
-# Set machine sleep to 5 minutes on battery
-sudo pmset -b sleep 15
+# A laptop has a battery; a desktop doesn't. Lets us skip laptop-only knobs.
+is_laptop() { pmset -g batt 2>/dev/null | grep -q "InternalBattery"; }
+
+# Laptop-only settings
+if is_laptop; then
+	# Enable lid wakeup
+	sudo pmset -a lidwake 1
+
+	# Sleep the machine after 15 minutes on battery
+	sudo pmset -b sleep 15
+fi
+
+# Note: standbydelay and hibernatemode are intentionally omitted. They're
+# ignored on Apple Silicon, and on an Intel desktop they let the USB bus power
+# down during sleep — which left the webcam black until it was physically
+# replugged. Leave sleep shallow so devices resume cleanly on wake.
 
 # Set standby delay to 24 hours (default is 1 hour)
-sudo pmset -a standbydelay 86400
+# sudo pmset -a standbydelay 86400
 
 # Hibernation mode
 # 0: Disable hibernation (speeds up entering sleep mode)
 # 3: Copy RAM to disk so the system state can still be restored in case of a
 #    power failure.
 # 25: hibernate mode; the setting used for post-2005) laptops.
-sudo pmset -a hibernatemode 25
+# sudo pmset -a hibernatemode 25
 
 # Remove the sleep image file to save disk space
 #sudo rm /private/var/vm/sleepimage
