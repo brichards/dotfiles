@@ -1,5 +1,6 @@
 # Customize the PATH
 export PATH=$PATH:~/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/opt/coreutils/libexec/gnubin
+export PATH=$PATH:~/.local/bin
 
 # Include Git binaries
 export PATH=$PATH:/usr/local/git/bin
