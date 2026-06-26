@@ -150,24 +150,114 @@ function webm2mp4() {
 }
 
 function splitepisodes() {
-	if [ -z "$1" ]; then
-		echo "Usage: splitepisodes <filename> [output] [season] [start_episode_number]"
-		return 1
+	# Confirm mkvmerge is installed
+	command -v mkvmerge >/dev/null 2>&1 || { print -u2 "splitepisodes: mkvmerge not found — install with: brew install mkvtoolnix"; return 1 }
+
+	# Print full help on -h, --help, or when no args provided
+	if (( $# == 0 )) || [[ -n "${@[(r)-h]}${@[(r)--help]}" ]]; then
+		cat <<'EOF'
+splitepisodes — split a multi-episode MKV into one file per episode
+
+USAGE
+  splitepisodes <filename> [options]
+  splitepisodes -h | --help
+
+DESCRIPTION
+  Cuts a single MKV that holds several back-to-back TV episodes (e.g. a
+  full-disc rip) into individual episode files at chapter boundaries, using
+  mkvmerge, then renames each piece to a Plex/Jellyfin/Infuse-friendly
+  "Output - SxxEyy.mkv". The filename is positional; everything else is an
+  order-independent flag.
+
+OPTIONS
+  -i, --input <file>      Give the source file as a flag instead of
+                          positionally (positional is default).
+  -o, --output <name>     Base name for results (no extension needed).
+                          Default: the source filename without its extension,
+                          written alongside the source.
+  -s, --season <n>        Season number used in the SxxEyy tag.   Default: 1
+  -e, --episode <n>       Episode number for the FIRST piece; the
+                          rest increment from there.              Default: 1
+  -c, --chapters <list>   Comma-separated chapter numbers at which a NEW
+                          episode BEGINS (passed to mkvmerge --split
+                          chapters:). Default: 5,9,13,17,21,25,29,33
+                          (i.e. 4 chapters per episode)
+  -h, --help              Show this help.
+
+OUTPUT
+  Zero-padded, e.g.:  "Output - S01E01.mkv", "Output - S01E02.mkv", ...
+
+EXAMPLES
+  # Defaults: season 1, from episode 1, 4 chapters per episode
+  splitepisodes Disc1.mkv
+
+  # Custom name, season 2, numbering continues at episode 5
+  splitepisodes Disc2.mkv -o "Awesome Show" -s 2 -e 5
+
+  # Change ONLY the split points — no need to restate the other options
+  splitepisodes Disc3.mkv -c 6,11
+
+NOTES
+  • Requires mkvmerge:  brew install mkvtoolnix
+  • The chapter list marks where each episode STARTS, not its length.
+  • Inspect chapters first with:  mkvinfo <file> | grep -i chapter
+EOF
+		(( $# > 0 ))   # rc 0 when --help was passed, rc 1 when called with no args
+		return
 	fi
 
-	INPUT="$1"
-	OUTPUT="${2:-${INPUT%.*}-temp.mkv}"  # Default output name if not provided
-	SEASON="${3:-1}"  # Default to 1 if not provided
-	START_EPISODE="${4:-1}"  # Default to 1 if not provided
+	# Set default values
+	local input="" output="" chapter_list="5,9,13,17,21,25,29,33"
+	local season=1 start_episode=1
 
-	# Split at the chapter positions where each episode starts
-	mkvmerge -o "${OUTPUT}.mkv" --split chapters:5,9,13,17,21,25,29,33 "$INPUT"
-
-	# Rename output files
-	INDEX=0
-	for FILE in "${OUTPUT}"-*.mkv; do
-		EPISODE_NUM=$((START_EPISODE + INDEX))
-		mv "$FILE" "${OUTPUT}-s${SEASON}e${EPISODE_NUM}.mkv"
-		((INDEX++))
+	# Set flag-based inputs
+	while (( $# )); do
+		case "$1" in
+			-o|--output|-s|--season|-e|--episode|-c|--chapters|-i|--input)
+				(( $# >= 2 )) || { print -u2 "splitepisodes: $1 requires a value"; return 1 }
+				case "$1" in
+					-o|--output)   output="$2" ;;
+					-s|--season)   season="$2" ;;
+					-e|--episode)  start_episode="$2" ;;
+					-c|--chapters) chapter_list="$2" ;;
+					-i|--input)    input="$2" ;;
+				esac
+				shift 2 ;;
+			--) shift; [[ -n "${1:-}" ]] && { input="$1"; shift } ;;
+			-*) print -u2 "splitepisodes: unknown option: $1 (try --help)"; return 1 ;;
+			*)  input="$1"; shift ;;
+		esac
 	done
+
+	# Validate inputs
+	[[ -n "$input" ]] || { print -u2 "splitepisodes: no input file given (try --help)"; return 1 }
+	[[ "$season" == <-> ]]        || { print -u2 "splitepisodes: --season must be a number (got: $season)"; return 1 }
+	[[ "$start_episode" == <-> ]] || { print -u2 "splitepisodes: --episode must be a number (got: $start_episode)"; return 1 }
+	[[ -f "$input" ]] || { print -u2 "splitepisodes: input file not found: $input"; return 1 }
+
+	# Build the output filename
+	output="${output:-${input:r}}"   # default: source name minus extension
+	output="${output%.mkv}"          # tolerate an explicit ".mkv" on --output
+	season=$(( 10#$season ))         # 10# strips leading zeros (avoids octal)
+	start_episode=$(( 10#$start_episode ))
+	local tmp="${output}.split"
+
+	print -u2 "splitepisodes: cutting '$input' at chapters ${chapter_list} ..."
+	mkvmerge -o "${tmp}.mkv" --split "chapters:${chapter_list}" "$input" || return 1
+
+	# Rename each split piece to "<output> - SxxEyy.mkv".
+	local -i index=0
+	local file tag
+	for file in "${tmp}"-*.mkv(N); do
+		tag="$(printf 'S%02dE%02d' "$season" "$(( start_episode + index ))")"
+		mv -- "$file" "${output} - ${tag}.mkv"
+		print -u2 "  -> ${output} - ${tag}.mkv"
+		(( index++ ))
+	done
+
+	if (( index == 0 )); then
+		print -u2 "splitepisodes: no episodes produced — check the chapter list and that '$input' actually has chapters."
+		return 1
+	fi
+	print -u2 "splitepisodes: done — created ${index} episode files."
 }
