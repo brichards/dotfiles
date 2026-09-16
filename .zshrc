@@ -54,7 +54,7 @@ alias o="open"
 alias oo="open ."
 alias makemkv="/Applications/MakeMKV.app/Contents/MacOS/makemkvcon"
 alias code="code -n"
-alias yt="youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4'"
+alias yt="yt-dlp -f 'bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[ext=m4a]/best[vcodec^=avc1][ext=mp4]'"
 
 # Git shortcuts
 alias pr="gh pr create"
