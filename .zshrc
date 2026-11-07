@@ -257,3 +257,7 @@ EOF
 	fi
 	print -u2 "splitepisodes: done — created ${index} episode files."
 }
+
+# Opt out of CLI telemetry (modern-web-guidance, skills, and other tools that honor these)
+export DISABLE_TELEMETRY=1
+export DO_NOT_TRACK=1
