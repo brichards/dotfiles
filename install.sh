@@ -357,7 +357,7 @@ brew "nghttp2"
 brew "openssl"
 brew "mysql", restart_service: :changed
 brew "redis", restart_service: :changed
-brew "php", restart_service: :changed
+brew "php"
 brew "phpunit", link: false
 brew "wp-cli"
 brew "sass/sass/sass"
@@ -401,15 +401,6 @@ ran_brew=true
     # Add additional packages for WP-CLI
     echo "\nInstalling additional WP-CLI packages.\n"
     wp package install aaemnnosttv/wp-cli-login-command
-    wp package install aaemnnosttv/wp-cli-valet-command
-    wp package install brichards/wp-cli-random-content
-    wp package install boxuk/dictator
-    wp package install runcommand/hook
-    wp package install runcommand/query-debug
-    wp package install wp-cli/dist-archive-command
-    wp package install wp-cli/profile-command
-    wp package install wp-cli/restful
-    wp package install wp-cli/scaffold-package-command
 
     # Install WordPress Coding Standards and tests
     echo "\n\nInstalling PHPCS with WP Coding Standards.\n"
